@@ -30,7 +30,7 @@ public class Pregunta2 {
 				AnyadirCliente(true);
 				break;
 			case 2:
-				// consultaPerPosicio(f1);
+				LeerClientesPosicion();
 				break;
 			case 3:
 				LeerClientesCodigo();
@@ -83,7 +83,7 @@ public class Pregunta2 {
 	public static Clients FormatearFicheroCliente(String str) {
 		Clients cli;
 
-		if (!str.equals("")) {
+		if (str!=null) {
 			cli = new Clients();
 
 			cli.Codi = Integer.parseInt(str.substring(0, 4).trim());
@@ -94,9 +94,34 @@ public class Pregunta2 {
 			cli.AnyNaixement = Integer.parseInt(str.substring(68, 72).trim());
 			cli.AdreçaPostal = str.substring(72, 122).trim();
 			cli.eMail = str.substring(122, 162).trim();
+			if(str.substring(162, 166).equals("true")) {
+				cli.VIP = true;
+			}else {
+				cli.VIP = false;
+			}
 		} else
 			cli = null;
 		return cli;
+	}
+	
+	public static void LeerClientesPosicion() {
+		System.out.print("Introduce la posicion a buscar: ");
+		int posicionBuscar = llegirInt();
+
+		// Creamos el enlace con el fichero en el disco para leer
+		BufferedReader buf = AbrirFicheroLectura(NOM_FITXER, true);
+
+		
+		for(int i = 1; i<posicionBuscar;i++) {
+			LeerLinea(buf);
+		}
+		String linea = LeerLinea(buf);
+		Clients cli = FormatearFicheroCliente(linea);
+		
+		if (cli != null)
+			EscribirDatosCliente(cli);
+
+		CerrarFichero(buf);
 	}
 
 	public static void LeerClientesCodigo() {
@@ -166,6 +191,7 @@ public class Pregunta2 {
 		result += String.format("%-4s", cli.AnyNaixement);
 		result += String.format("%-50s", cli.AdreçaPostal);
 		result += String.format("%-40s", cli.eMail);
+		result += String.format("%-1s", cli.VIP);
 
 		return result;
 	}
