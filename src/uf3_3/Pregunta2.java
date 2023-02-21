@@ -390,19 +390,6 @@ public class Pregunta2 {
 		pw.println(linea);
 	}
 
-	public static void EscribirFichero(boolean blnAnyadir) {
-		// Creamos el enlace con el fichero en el disco
-		PrintWriter pw = AbrirFicheroEscritura(NOM_FITXER, true, blnAnyadir);
-
-		String linea = llegirString();
-		while (!linea.equals("")) {
-			EscribirLinea(pw, linea);
-			linea = llegirString();
-		}
-
-		CerrarFichero(pw);
-	}
-
 	public static void BorrarFichero(String filename) {
 		File f = new File(filename);
 		f.delete();
