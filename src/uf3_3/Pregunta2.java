@@ -40,7 +40,7 @@ public class Pregunta2 {
 				ModificarClientesPosicion();
 				break;
 			case 5:
-				// borrarClient(f1);
+				BorrarClientesPosicion();
 				break;
 			case 6:
 				LeerFichero();
@@ -68,10 +68,18 @@ public class Pregunta2 {
 		return opcio;
 	}
 	
-	public static void ModificarClientesPosicion() {
-		System.out.print("Introduce la posicion del cliente a modificar: ");
+	public static void BorrarClientesPosicion() {
+		System.out.print("Introduce la posicion del cliente a borrar: ");
 		int posicionBuscar = llegirInt();
 
+		ArrayList<String> lista = CopiarArchivo();
+		lista.remove(posicionBuscar);
+		BorrarFichero(NOM_FITXER);
+		AbrirFichero(NOM_FITXER, true);
+		EscribirLista(lista);
+	}
+
+	private static ArrayList<String> CopiarArchivo() {
 		// Creamos el enlace con el fichero en el disco para leer
 		BufferedReader buf = AbrirFicheroLectura(NOM_FITXER, true);
 
@@ -82,15 +90,27 @@ public class Pregunta2 {
 			linea = LeerLinea(buf);
 		}
 		CerrarFichero(buf);
-		Clients cli = PedirDatosCliente();
-		lista.set(posicionBuscar-1,FormatearClienteFichero(cli));
-		BorrarFichero(NOM_FITXER);
-		AbrirFichero(NOM_FITXER, true);
+		return lista;
+	}
+
+	private static void EscribirLista(ArrayList<String> lista) {
 		PrintWriter pw = AbrirFicheroEscritura(NOM_FITXER, true, true);
 		for (String registre : lista) {
 			EscribirLinea(pw, registre);
 		}
 		CerrarFichero(pw);
+	}
+	
+	public static void ModificarClientesPosicion() {
+		System.out.print("Introduce la posicion del cliente a modificar: ");
+		int posicionBuscar = llegirInt();
+
+		ArrayList<String> lista = CopiarArchivo();
+		Clients cli = PedirDatosCliente();
+		lista.set(posicionBuscar-1,FormatearClienteFichero(cli));
+		BorrarFichero(NOM_FITXER);
+		AbrirFichero(NOM_FITXER, true);
+		EscribirLista(lista);
 	}
 
 	public static void EscribirDatosCliente(Clients c) {
