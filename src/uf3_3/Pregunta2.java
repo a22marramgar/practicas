@@ -1,6 +1,7 @@
 package uf3_3;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 import static utils.UIUtilities.*;
@@ -36,7 +37,7 @@ public class Pregunta2 {
 				LeerClientesCodigo();
 				break;
 			case 4:
-				// modificarClient(f1);
+				ModificarClientesPosicion();
 				break;
 			case 5:
 				// borrarClient(f1);
@@ -65,6 +66,31 @@ public class Pregunta2 {
 		System.out.println("7. Sortir");
 		int opcio = escollirOpcio(1, 7);
 		return opcio;
+	}
+	
+	public static void ModificarClientesPosicion() {
+		System.out.print("Introduce la posicion del cliente a modificar: ");
+		int posicionBuscar = llegirInt();
+
+		// Creamos el enlace con el fichero en el disco para leer
+		BufferedReader buf = AbrirFicheroLectura(NOM_FITXER, true);
+
+		ArrayList<String> lista = new ArrayList<>();
+		String linea = LeerLinea(buf);
+		while(linea!=null) {
+			lista.add(linea);
+			linea = LeerLinea(buf);
+		}
+		CerrarFichero(buf);
+		Clients cli = PedirDatosCliente();
+		lista.set(posicionBuscar-1,FormatearClienteFichero(cli));
+		BorrarFichero(NOM_FITXER);
+		AbrirFichero(NOM_FITXER, true);
+		PrintWriter pw = AbrirFicheroEscritura(NOM_FITXER, true, true);
+		for (String registre : lista) {
+			EscribirLinea(pw, registre);
+		}
+		CerrarFichero(pw);
 	}
 
 	public static void EscribirDatosCliente(Clients c) {
