@@ -1,4 +1,4 @@
-package uf3_3;
+package uf3_4;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ class Clients {
 	boolean VIP;
 }
 
-public class Pregunta2 {
+public class Pregunta1 {
 
 	private static final String NOM_FITXER = "./ClientsBinari.bin";
 
@@ -274,7 +274,7 @@ public class Pregunta2 {
 				try {
 					result.createNewFile();
 				} catch (IOException ex) {
-					Logger.getLogger(Pregunta2.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
 					result = null;
 				}
 			} else {
@@ -305,7 +305,7 @@ public class Pregunta2 {
 				// Buffered reader para poder leer más comodamente
 				br = new BufferedReader(reader);
 			} catch (FileNotFoundException ex) {
-				Logger.getLogger(Pregunta2.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -332,7 +332,7 @@ public class Pregunta2 {
 				// PrintWriter para poder escribir más comodamente
 				pw = new PrintWriter(writer);
 			} catch (IOException ex) {
-				Logger.getLogger(Pregunta2.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -348,7 +348,7 @@ public class Pregunta2 {
 		try {
 			br.close();
 		} catch (IOException ex) {
-			Logger.getLogger(Pregunta2.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -374,7 +374,7 @@ public class Pregunta2 {
 		try {
 			linea = br.readLine();
 		} catch (IOException ex) {
-			Logger.getLogger(Pregunta2.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		return linea;
