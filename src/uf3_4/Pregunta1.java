@@ -185,6 +185,7 @@ public class Pregunta1 {
         
         Clients cli = PedirDatosCliente();
 
+        GrabarIndiceClientePosicion(f.length());
         GrabarDatosClienteBinario(dos, cli, f);        
         
         CerrarFicheroBinario(dos);
@@ -229,7 +230,6 @@ public class Pregunta1 {
 
     public static void GrabarDatosClienteBinario(DataOutputStream dos, Clients cli, File f) {
         try {
-            GrabarIndiceClientePosicion(f.length());
             dos.writeInt(cli.Codi);
             dos.writeUTF(cli.Nom);
             dos.writeUTF(cli.Cognoms);
@@ -247,7 +247,6 @@ public class Pregunta1 {
     
     public static void GrabarDatosClienteBinario(RandomAccessFile raf, Clients cli, File f) {
         try {
-            GrabarIndiceClientePosicion(f.length());
             raf.writeInt(cli.Codi);
             raf.writeUTF(cli.Nom);
             raf.writeUTF(cli.Cognoms);
@@ -433,4 +432,15 @@ public class Pregunta1 {
         return cli;
     }
 
+    public static void ModificarIndiceClientePosicion(long posicion, long posicion_indice) {
+
+        try {
+            RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "rw");
+            raf.seek(posicion_indice);
+            raf.writeLong(posicion);
+            raf.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
