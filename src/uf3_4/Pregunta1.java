@@ -185,7 +185,7 @@ public class Pregunta1 {
         
         Clients cli = PedirDatosCliente();
 
-            GrabarDatosClienteBinario(dos, cli, f);        
+        GrabarDatosClienteBinario(dos, cli, f);        
         
         CerrarFicheroBinario(dos);
         
@@ -244,6 +244,24 @@ public class Pregunta1 {
         }
 
     }
+    
+    public static void GrabarDatosClienteBinario(RandomAccessFile raf, Clients cli, File f) {
+        try {
+            GrabarIndiceClientePosicion(f.length());
+            raf.writeInt(cli.Codi);
+            raf.writeUTF(cli.Nom);
+            raf.writeUTF(cli.Cognoms);
+            raf.writeInt(cli.DiaNaixement);
+            raf.writeInt(cli.MesNaixement);
+            raf.writeInt(cli.AnyNaixement);
+            raf.writeUTF(cli.AdreçaPostal);
+            raf.writeUTF(cli.eMail);
+            raf.writeBoolean(cli.VIP);
+        } catch (IOException ex) {
+            Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
     public static DataInputStream AbrirFicheroLecturaBinario(File f) {
         DataInputStream dis = null;
@@ -364,15 +382,17 @@ public class Pregunta1 {
         try {
             int posicionBuscar = llegirInt();
             long posicion_indice = (posicionBuscar - 1) * TAMANY_LONG;
-            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "rw");
+            RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "r");
             raf.seek(posicion_indice);
             long posicion_datos = raf.readLong();
             raf.close();
 
-            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "r");
+            File f = AbrirFichero(NOM_FITXER, true);
+            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "rw");
             rafCliente.seek(posicion_datos);
 
-            Clients c = LeerDatosClienteBinario(rafCliente);
+            Clients c = PedirDatosCliente();
+            GrabarDatosClienteBinario(rafCliente, c, f);    
             rafCliente.close();
         } catch (IOException ex) {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
@@ -383,7 +403,7 @@ public class Pregunta1 {
         try {
             int posicionBuscar = llegirInt();
             long posicion_indice = (posicionBuscar - 1) * TAMANY_LONG;
-            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "rw");
+            RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "rw");
             raf.seek(posicion_indice);
             long posicion_datos = raf.readLong();
             raf.close();
