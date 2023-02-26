@@ -16,6 +16,7 @@ class Clients {
     String AdreçaPostal;
     String eMail;
     boolean VIP;
+    boolean borrado;
 }
 
 public class Pregunta1 {
@@ -71,15 +72,16 @@ public class Pregunta1 {
     }
 
     public static void EscribirDatosCliente(Clients c) {
-        System.out.println("Codi: " + c.Codi);
-        System.out.println("Nom: " + c.Nom);
-        System.out.println("Cognom: " + c.Cognoms);
-        System.out.println("Adreca: " + c.AdreçaPostal);
-        System.out.println("Dia Naixement: " + c.DiaNaixement);
-        System.out.println("Mes Naixement: " + c.MesNaixement);
-        System.out.println("Any Naixement: " + c.AnyNaixement);
-        System.out.println("e-mail: " + c.eMail);
-        System.out.println("VIP: " + c.VIP);
+
+            System.out.println("Codi: " + c.Codi);
+            System.out.println("Nom: " + c.Nom);
+            System.out.println("Cognom: " + c.Cognoms);
+            System.out.println("Adreca: " + c.AdreçaPostal);
+            System.out.println("Dia Naixement: " + c.DiaNaixement);
+            System.out.println("Mes Naixement: " + c.MesNaixement);
+            System.out.println("Any Naixement: " + c.AnyNaixement);
+            System.out.println("e-mail: " + c.eMail);
+            System.out.println("VIP: " + c.VIP);
 
     }
 
@@ -127,6 +129,7 @@ public class Pregunta1 {
             } else {
                 c.VIP = false;
             }
+            c.borrado = false;
         } else {
             c = null;
         }
@@ -178,20 +181,18 @@ public class Pregunta1 {
         return result;
     }
 
-    public static void GrabarClientesBinario()
-    {
+    public static void GrabarClientesBinario() {
         File f = AbrirFichero(NOM_FITXER, true);
         DataOutputStream dos = AbrirFicheroEscrituraBinario(true, f);
-        
+
         Clients cli = PedirDatosCliente();
 
         GrabarIndiceClientePosicion(f.length());
-        GrabarDatosClienteBinario(dos, cli, f);        
-        
+        GrabarDatosClienteBinario(dos, cli, f);
+
         CerrarFicheroBinario(dos);
-        
+
     }
-    
 
     public static DataOutputStream AbrirFicheroEscrituraBinario(boolean blnAnyadir, File f) {
         DataOutputStream dos = null;
@@ -207,7 +208,7 @@ public class Pregunta1 {
                 Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         return dos;
     }
 
@@ -239,12 +240,13 @@ public class Pregunta1 {
             dos.writeUTF(cli.AdreçaPostal);
             dos.writeUTF(cli.eMail);
             dos.writeBoolean(cli.VIP);
+            dos.writeBoolean(cli.borrado);
         } catch (IOException ex) {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
+
     public static void GrabarDatosClienteBinario(RandomAccessFile raf, Clients cli, File f) {
         try {
             raf.writeInt(cli.Codi);
@@ -260,7 +262,6 @@ public class Pregunta1 {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     public static DataInputStream AbrirFicheroLecturaBinario(File f) {
         DataInputStream dis = null;
@@ -390,8 +391,10 @@ public class Pregunta1 {
             RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "rw");
             rafCliente.seek(posicion_datos);
 
+            
             Clients c = PedirDatosCliente();
-            GrabarDatosClienteBinario(rafCliente, c, f);    
+            ModificarIndiceClientePosicion(posicion_datos, posicion_indice);
+            GrabarDatosClienteBinario(rafCliente, c, f);
             rafCliente.close();
         } catch (IOException ex) {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
@@ -407,27 +410,29 @@ public class Pregunta1 {
             long posicion_datos = raf.readLong();
             raf.close();
 
+            File f = AbrirFichero(NOM_FITXER, true);
             RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "r");
             rafCliente.seek(posicion_datos);
 
             Clients c = SetClientNull(rafCliente);
+            GrabarDatosClienteBinario(rafCliente, c, f);
             rafCliente.close();
         } catch (IOException ex) {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static Clients SetClientNull(RandomAccessFile rafCliente) {
         Clients cli = new Clients();
 
         cli.Codi = 0;
-        cli.Nom = null;
-        cli.Cognoms = null;
+        cli.Nom = "";
+        cli.Cognoms = "";
         cli.DiaNaixement = 0;
         cli.MesNaixement = 0;
         cli.AnyNaixement = 0;
-        cli.AdreçaPostal = null;
-        cli.eMail = null;
+        cli.AdreçaPostal = "";
+        cli.eMail = "";
         cli.VIP = false;
         return cli;
     }
