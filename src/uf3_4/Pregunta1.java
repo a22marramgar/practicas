@@ -361,11 +361,56 @@ public class Pregunta1 {
     }
 
     private static void ModificarClienteBinarioPorPosicion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int posicionBuscar = llegirInt();
+            long posicion_indice = (posicionBuscar - 1) * TAMANY_LONG;
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "rw");
+            raf.seek(posicion_indice);
+            long posicion_datos = raf.readLong();
+            raf.close();
+
+            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "r");
+            rafCliente.seek(posicion_datos);
+
+            Clients c = LeerDatosClienteBinario(rafCliente);
+            rafCliente.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static void BorrarClienteBinarioPorPosicion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int posicionBuscar = llegirInt();
+            long posicion_indice = (posicionBuscar - 1) * TAMANY_LONG;
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "rw");
+            raf.seek(posicion_indice);
+            long posicion_datos = raf.readLong();
+            raf.close();
+
+            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "r");
+            rafCliente.seek(posicion_datos);
+
+            Clients c = SetClientNull(rafCliente);
+            rafCliente.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static Clients SetClientNull(RandomAccessFile rafCliente) {
+        Clients cli = new Clients();
+
+        cli.Codi = 0;
+        cli.Nom = null;
+        cli.Cognoms = null;
+        cli.DiaNaixement = 0;
+        cli.MesNaixement = 0;
+        cli.AnyNaixement = 0;
+        cli.AdreçaPostal = null;
+        cli.eMail = null;
+        cli.VIP = false;
+        return cli;
     }
 
 }
