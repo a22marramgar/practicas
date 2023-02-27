@@ -124,32 +124,12 @@ public class Pregunta1 {
             System.out.println("VIP?");
             System.out.println("1. Si");
             System.out.println("2. No");
-            if (escollirOpcio(1, 2) == 1) {
-                c.VIP = true;
-            } else {
-                c.VIP = false;
-            }
+            c.VIP = escollirOpcio(1, 2) == 1;
             c.borrado = false;
         } else {
             c = null;
         }
         return c;
-    }
-
-    public static String FormatearClienteFichero(Clients cli) {
-        String result = "";
-
-        result += String.format("%-4s", cli.Codi);
-        result += String.format("%-20s", cli.Nom);
-        result += String.format("%-40s", cli.Cognoms);
-        result += String.format("%-2s", cli.DiaNaixement);
-        result += String.format("%-2s", cli.MesNaixement);
-        result += String.format("%-4s", cli.AnyNaixement);
-        result += String.format("%-50s", cli.AdreçaPostal);
-        result += String.format("%-40s", cli.eMail);
-        result += String.format("%-1s", cli.VIP);
-
-        return result;
     }
 
     /**
@@ -258,6 +238,7 @@ public class Pregunta1 {
             raf.writeUTF(cli.AdreçaPostal);
             raf.writeUTF(cli.eMail);
             raf.writeBoolean(cli.VIP);
+            raf.writeBoolean(cli.borrado);
         } catch (IOException ex) {
             Logger.getLogger(Pregunta1.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -287,7 +268,9 @@ public class Pregunta1 {
 
         Clients cli = LeerDatosClienteBinario(dis);
         while (cli != null) {
-            EscribirDatosCliente(cli);
+            if(!cli.borrado){
+                EscribirDatosCliente(cli);
+            }
             cli = LeerDatosClienteBinario(dis);
         }
 
@@ -307,6 +290,7 @@ public class Pregunta1 {
             cli.AdreçaPostal = dis.readUTF();
             cli.eMail = dis.readUTF();
             cli.VIP = dis.readBoolean();
+            cli.borrado = dis.readBoolean();
 
         } catch (IOException ex) {
             cli = null;
@@ -405,16 +389,18 @@ public class Pregunta1 {
         try {
             int posicionBuscar = llegirInt();
             long posicion_indice = (posicionBuscar - 1) * TAMANY_LONG;
-            RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "rw");
+            RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "r");
             raf.seek(posicion_indice);
             long posicion_datos = raf.readLong();
             raf.close();
 
             File f = AbrirFichero(NOM_FITXER, true);
-            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "r");
+            RandomAccessFile rafCliente = new RandomAccessFile(NOM_FITXER, "rw");
             rafCliente.seek(posicion_datos);
 
-            Clients c = SetClientNull(rafCliente);
+            Clients c = LeerDatosClienteBinario(rafCliente);
+            c.borrado = true;
+            rafCliente.seek(posicion_datos);
             GrabarDatosClienteBinario(rafCliente, c, f);
             rafCliente.close();
         } catch (IOException ex) {
@@ -441,7 +427,7 @@ public class Pregunta1 {
 
         try {
             RandomAccessFile raf = new RandomAccessFile(NOM_FTX_CLIENTS_IDXPOS, "rw");
-            raf.seek(posicion_indice);
+            raf.seek(posicion_indice+1);
             raf.writeLong(posicion);
             raf.close();
         } catch (IOException ex) {
